@@ -12,15 +12,31 @@ def welcome():
 
 @app.route('/recommendation/')
 def type_movie():
-    return "Enter a movie title..."
-@app.route('/recommendation/<string:title>', methods = ['GET'])
-def query_movie(title):
-    s_query_movie, l_recommendation = movie_recommendation.recommendation(movie_title = title)
+    str_comment = "Type '/recommendation/id/' for movies recommendation by id \r"
+    str_comment = str_comment + "or \r"
+    str_comment = str_comment + "type '/recommendation/title/' for movies recommendation by title..."
+    return str_comment
+@app.route('/recommendation/id/')
+def id():
+    return "Enter an id movie..."
+@app.route('/recommendation/id/<string:s_query>', methods = ['GET'])
+def id_movie(s_query):
+    s_query_movie, d_query, d_recommendation = movie_recommendation.recommendation(id_title = s_query, index = True)
     if s_query_movie != "":
-        str_recommend = 'Recommendations for "' + str(s_query_movie) + '" '
-        return jsonify({str_recommend : str(l_recommendation) })
+        return jsonify(d_query, d_recommendation)
     else:
-        str_recommend = 'The "'+ title +'" movie is unknown.'
+        str_recommend = 'The movie with "'+ s_query +'" id is unknown.'
+        return str_recommend
+@app.route('/recommendation/title/')
+def title():
+    return "Enter a title movie..."
+@app.route('/recommendation/title/<string:s_query>', methods = ['GET'])
+def title_movie(s_query):
+    s_query_movie, d_query, d_recommendation = movie_recommendation.recommendation(id_title = s_query)
+    if s_query_movie != "":
+        return jsonify(d_query, d_recommendation)
+    else:
+        str_recommend = 'The "'+ s_query +'" movie is unknown.'
         return str_recommend
    
         
