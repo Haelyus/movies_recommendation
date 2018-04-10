@@ -28,7 +28,7 @@ def col_rech_titre(df, fin = True, suffix =""):
     return liste_col 
 
 def recommendation(id_title, index = False):
-    """Recommendation de films via MHA, clusters, kNN.
+    """Recommendation de films via kNN.
     - Args:
             id_title(string): movie title ou movie id
             index(boolean): flag pour définir si recherche par id (index) du film
@@ -47,10 +47,14 @@ def recommendation(id_title, index = False):
     if index == True :
         # Recherche par l'id (index) du film
         if id_title != "":
-            lower_movie_title = str(id_title).lower()
-            match = re.search("\D", lower_movie_title)
+            lower_movie_id = str(id_title).lower()
+            match = re.search("\D", lower_movie_id)
             if not match:
-                query_index = int(lower_movie_title)        
+                #query_index = int(lower_movie_title)        
+                # id (imdb) du film 
+                if len(movies[movies['imdb_id'] == int(lower_movie_id)].index) > 0:
+                    # On choisit le premier film trouvé
+                    query_index = movies[movies['imdb_id'] == int(lower_movie_id)].index[0]
     else:
         if id_title != "":
             # titre du film en minuscule
@@ -76,17 +80,18 @@ def recommendation(id_title, index = False):
             if i == 0:
                 #print(movies[movies.index == query_index]['movie_title'].str.strip().values[0] + " (" + str(query_index) + ")")
                 query_movie = movies[movies.index == query_index]['movie_title'].str.strip().values[0] + " (id=" + str(query_index) + ")"
-                d_query = {"Recommendations for" : {'name' :  movies[movies.index == query_index]['movie_title'].str.strip().values[0], 'id' : str(query_index)}}
+                #d_query = {"Recommendations for" : {'name' :  movies[movies.index == query_index]['movie_title'].str.strip().values[0], 'id' : str(query_index)}}
+                d_query = {"Recommendations for" : {'name' :  movies[movies.index == query_index]['movie_title'].str.strip().values[0], 'id' : str(movies[movies.index == 0]['imdb_id'].values[0])}}
             else:
                 if query_index != indices.flatten()[i]:
                     l_neighbors.append(indices.flatten()[i])
         # On trie les 5 meilleurs des 18 plus proches en fonction de leur popularité
         if len(l_neighbors) > 0:
             recommend_movies = movies[movies.index.isin(l_neighbors)]
-            top_movies = recommend_movies[['movie_title', 'popularity']].sort_values('popularity', ascending=False).head(5)
+            top_movies = recommend_movies[['movie_title', 'popularity', 'imdb_id']].sort_values('popularity', ascending=False).head(5)
             for i in list(top_movies.index):
-                d_recommend = {'name' : top_movies[top_movies.index == i]['movie_title'].str.strip().values[0], 'id' : str(i)}
-                #l_recommend.append(dict(top_movies[top_movies.index == i]['movie_title'].str.strip().values[0] + " (" + str(i) + ")"))
+                #d_recommend = {'name' : top_movies[top_movies.index == i]['movie_title'].str.strip().values[0], 'id' : str(i)}
+                d_recommend = {'name' : top_movies[top_movies.index == i]['movie_title'].str.strip().values[0], 'id' : str(top_movies[top_movies.index == i]['imdb_id'].values[0])}
                 l_recommend.append(d_recommend)
             d_result = {"Results" : l_recommend}
         
