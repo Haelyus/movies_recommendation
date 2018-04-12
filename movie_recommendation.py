@@ -81,7 +81,7 @@ def recommendation(id_title, index = False):
                 #print(movies[movies.index == query_index]['movie_title'].str.strip().values[0] + " (" + str(query_index) + ")")
                 query_movie = movies[movies.index == query_index]['movie_title'].str.strip().values[0] + " (id=" + str(query_index) + ")"
                 #d_query = {"Recommendations for" : {'name' :  movies[movies.index == query_index]['movie_title'].str.strip().values[0], 'id' : str(query_index)}}
-                d_query = {"Recommendations for" : {'name' :  movies[movies.index == query_index]['movie_title'].str.strip().values[0], 'id' : str(movies[movies.index == 0]['imdb_id'].values[0])}}
+                d_query = {"Recommendations for" : {'name' :  movies[movies.index == query_index]['movie_title'].str.strip().values[0], 'id' : str(movies[movies.index == query_index]['imdb_id'].values[0])}}
             else:
                 if query_index != indices.flatten()[i]:
                     l_neighbors.append(indices.flatten()[i])
