@@ -29,7 +29,7 @@ def id_movie(s_query):
         return str_recommend
 @app.route('/recommendation/title/')
 def title():
-    return "Enter a title movie..."
+    return "Enter a title movie. For example, recommandations for the 'Amadeus' movie, type '/recommendation/title/amadeus'"
 @app.route('/recommendation/title/<string:s_query>', methods = ['GET'])
 def title_movie(s_query):
     s_query_movie, d_recommendation = movie_recommendation.recommendation(id_title = s_query)
