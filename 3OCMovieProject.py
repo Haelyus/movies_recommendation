@@ -8,7 +8,7 @@ app = Flask(__name__)
 #et la lie à la fonction welcome
 @app.route("/")
 def welcome():
-    return "Welcome to the Movies Recommendation !"
+    return "Welcome to the Movies Recommendation ! Type '/recommendation/ for help..."
 
 @app.route('/recommendation/')
 def type_movie():
